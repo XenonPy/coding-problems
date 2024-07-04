@@ -12,6 +12,8 @@ gradebook = {
 
 }
 
+start = time.time()
+
 for i in range(1, benchmark_level + 1):
     gradebook.update({str(i): {}})
 
@@ -46,6 +48,9 @@ for student in gradebook: # var name should be ok because of local function scop
         avg = avg + int(gradebook[student][grade]) # avg += grade?
     average_grades[student] = avg / 5
 
+end = time.time()
+
 console.print(average_grades)
+console.print(f"\n Time to run: {end-start}")
 
 
