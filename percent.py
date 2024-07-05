@@ -3,6 +3,7 @@ import random
 import time
 from rich.prompt import IntPrompt
 from rich.console import Console
+from rich.progress import track
 console = Console()
 
 seeds = [1, 2, 3, 4] # seed 1: 0-50 seed 2: 50-65 seed 3: 65-80 seed 4: 80-100. Seeds assert academic competence 
@@ -14,7 +15,7 @@ gradebook = {
 
 start = time.time()
 
-for i in range(1, benchmark_level + 1):
+for i in track(range(1, benchmark_level + 1)):
     gradebook.update({str(i): {}})
 
 def generate_dataset(): # ngl snake case is kind of ugly
@@ -34,7 +35,9 @@ def generate_dataset(): # ngl snake case is kind of ugly
                 exit()
             gradebook[f"{student}"][str(grades)] = grade # Here, we are setting each student a random grade that we previously determined using their random seed.
 
-generate_dataset() # calling function to populate our gradebook dict
+
+with console.status("Populating dataset...", spinner="bouncingBall"):
+    generate_dataset() # calling function to populate our gradebook dict
 console.print(gradebook)
 
 average_grades = {
@@ -42,10 +45,10 @@ average_grades = {
 }
 print("\n\n")
 # Now we determine the averages by using basic math
-for student in gradebook: # var name should be ok because of local function scope right?
+for student in track(gradebook): # var name should be ok because of local function scope right?
     avg = 0
     for grade in gradebook[student]:
-        avg = avg + int(gradebook[student][grade]) # avg += grade?
+        avg += int(gradebook[student][grade]) # avg += grade?
     average_grades[student] = avg / 5
 
 end = time.time()
